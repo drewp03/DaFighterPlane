@@ -1,0 +1,94 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class GameManager : MonoBehaviour
+{
+
+    public GameObject playerPrefab;
+    public GameObject enemyOnePrefab;
+    public GameObject enemyTwoPrefab;
+    public GameObject enemyThreePrefab;
+    public GameObject cloudPrefab;
+
+    public TextMeshProUGUI livesText;
+
+    public float horizontalScreenSize;
+    public float verticalScreenSize;
+
+    public int score;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        horizontalScreenSize = 10f;
+        verticalScreenSize = 6f;
+        score = 0;
+        Instantiate(playerPrefab, transform.position, Quaternion.identity);
+        CreateSky();
+        InvokeRepeating("CreateEnemy", 1, 3);
+        InvokeRepeating("CreateEnemy2", 3, 6);
+        InvokeRepeating("CreateEnemy3", 2, 5);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        enemyTwoMovement();
+    }
+
+    void CreateEnemy()
+    {
+        Instantiate(enemyOnePrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
+    }
+
+    void CreateEnemy2()
+    {
+        Instantiate(enemyTwoPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
+    }
+
+    void CreateEnemy3()
+    {
+        Instantiate(enemyThreePrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
+    }
+
+    void enemyTwoMovement()
+    {
+        // Find all enemies of type EnemyTwo (assuming you have a script on them)
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy2");
+
+        foreach (GameObject enemy in enemies)
+        {
+            enemy.transform.Translate(Vector3.right * Time.deltaTime * 2f);
+
+            if(enemy.transform.position.x <= -horizontalScreenSize || transform.position.x > horizontalScreenSize)
+            {
+                
+            }
+         }
+
+        
+
+
+    }
+
+    void CreateSky()
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            Instantiate(cloudPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize), Random.Range(-verticalScreenSize, verticalScreenSize), 0), Quaternion.identity);
+        }
+        
+    }
+    public void AddScore(int earnedScore)
+    {
+        score = score + earnedScore;
+    }
+
+    public void ChangeLivesText (int currentLives)
+    {
+        livesText.text = "Lives: " + currentLives;
+    }
+}
